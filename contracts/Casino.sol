@@ -3,7 +3,7 @@
 pragma solidity ^0.8.4;
 
 contract Casino {
-    address public owner;
+    address payable owner;
     uint256 public minimumBet;
     uint256 public totalBet;
     uint256 public numberOfBets;
@@ -22,7 +22,7 @@ contract Casino {
       if(numberOfBets >= maxAmountOfBets) _;
    }
     constructor(uint256 _minimumBet) {
-        owner = msg.sender;
+        owner = payable(msg.sender);
         if(_minimumBet != 0 ) minimumBet = _minimumBet;
     }
     function kill() public {
@@ -67,11 +67,11 @@ contract Casino {
          }
          delete playerInfo[playerAddress]; // Delete all the players
       }
-      players.length = 0; // Delete all the players array
+      //players.length = 0; // Delete all the players array
       uint256 winnerEtherAmount = totalBet / winners.length; // How much each winner gets
       for(uint256 j = 0; j < count; j++){
          if(winners[j] != address(0)) // Check that the address in this fixed array is not empty
-         winners[j].transfer(winnerEtherAmount);
+         payable(winners[j]).transfer(winnerEtherAmount);
       }
       totalBet = 0;
       numberOfBets = 0;
